@@ -19,7 +19,7 @@ const CompareButton: React.FC<CompareButtonProps> = ({ product }) => {
     const currentComparison = JSON.parse(localStorage.getItem("comparison") || "[]")
 
     // Add the current product if it's not already in the list
-    if (!currentComparison.some((item: Product) => item.id === product.id)) {
+    if (!currentComparison.some((item: Product) => item._id === product._id)) {
       currentComparison.push(product)
       localStorage.setItem("comparison", JSON.stringify(currentComparison))
     }
