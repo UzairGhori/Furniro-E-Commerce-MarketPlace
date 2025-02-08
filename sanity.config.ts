@@ -1,28 +1,44 @@
-'use client'
+"use client";
 
-/**
- * This configuration is used to for the Sanity Studio that’s mounted on the `\src\app\studio\[[...tool]]\page.tsx` route
- */
+import { visionTool } from "@sanity/vision";
+import { defineConfig } from "sanity";
+import { structureTool } from "sanity/structure";
 
-import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
+// Import schema and structure
+import { schema } from "./src/sanity/schemaTypes";
+import { structure } from "./src/sanity/structure";
 
-// Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import {apiVersion, dataset, projectId} from './src/sanity/env'
-import {schema} from './src/sanity/schemaTypes'
-import {structure} from './src/sanity/structure'
+// Helper function to assert environment variables
+function assertValue<T>(value: T | undefined, errorMessage: string): T {
+  if (!value) {
+    throw new Error(errorMessage);
+  }
+  return value;
+}
 
+// Environment variables
+const apiVersion: string = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2025-02-06";
+const dataset: string = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_DATASET,
+  "Missing environment variable: NEXT_PUBLIC_SANITY_DATASET"
+);
+const projectId: string = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  "Missing or invalid environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID"
+);
+const token: string = assertValue(
+  process.env.SANITY_API_TOKEN,
+  "Missing environment variable: SANITY_API_TOKEN"
+);
+
+// Sanity configuration
 export default defineConfig({
-  basePath: '/studio',
+  basePath: "/studio",
   projectId,
   dataset,
-  // Add and edit the content schema in the './sanity/schemaTypes' folder
   schema,
   plugins: [
-    structureTool({structure}),
-    // Vision is for querying with GROQ from inside the Studio
-    // https://www.sanity.io/docs/the-vision-plugin
-    visionTool({defaultApiVersion: apiVersion}),
+    structureTool({ structure }),
+    visionTool({ defaultApiVersion: apiVersion }),
   ],
-})
+});
