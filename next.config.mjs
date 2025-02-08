@@ -13,6 +13,7 @@ const nextConfig = {
     SANITY_SERVER_TOKEN: process.env.SANITY_SERVER_TOKEN,
     SANITY_BROWSER_TOKEN: process.env.SANITY_BROWSER_TOKEN,
   },
+  output: "standalone", // Recommended for Vercel deployments
 };
 
 export default nextConfig;
